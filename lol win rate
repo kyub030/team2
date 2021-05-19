@@ -1,6 +1,8 @@
 import time
 import selenium
 from selenium import webdriver
+import matplotlib.pyplot as plt
+import matplotlib
 
 print("랭크가 있는 소환사의 이름을 입력하세요(콤마로 구분할 것)")
 print("ex : 치킨에 미친 사람, 이과 1등 요네, froze still")
@@ -13,6 +15,8 @@ driver = webdriver.Chrome(executable_path='./chromedriver.exe')
 driver.implicitly_wait(3)
 driver.get(url=URL)
 
+list = []
+
 for summoner in user_name:
     driver.find_element_by_name('userName').send_keys(summoner)
 
@@ -23,3 +27,23 @@ for summoner in user_name:
     rank=driver.find_element_by_class_name('TierRank').text
     rating = driver.find_element_by_class_name('winratio').text
     print(Name+"-"+rank + '('+rating+')')
+    list.append(int(rating[-3]+rating[-2]))
+    
+time.sleep(3)
+
+driver.close()
+
+matplotlib.rcParams["axes.unicode_minus"]=False
+plt.rc('font', family='Malgun Gothic')
+
+x=range(3)
+
+fig, ax1 = plt.subplots()
+ax1.set_title('소환사의 승률')
+ax1.bar(x, list,color="red")
+ax1.set_ylim(0,100)
+ax1.set_ylabel('승률')
+ax1.set_xticks(x)
+ax1.set_xticklabels('123')
+
+plt.show()
